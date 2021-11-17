@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>관리자 회원관리</h1>
+
+
+    <div class="list">
+        <table>
+            <thead>
+            <tr>
+                <th>NO</th>
+                <th>아이디(이메일)</th>
+                <th>이름</th>
+                <th>연락처</th>
+                <th>이메일 인증여부</th>
+                <th>가입일</th>
+                <th>관리자여부</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="x : ${list}">
+                <td></td>
+                <td th:text="${x.userId}"></td>
+                <td th:text="${x.userName}"></td>
+                <td th:text="${x.phone}"></td>
+                <td th:text="${x.userId}"></td>
+                <td>
+                    <p  th:if="${x.emailAuthYn}" >
+                        Y
+                    </p>
+                    <p  th:if="${!x.emailAuthYn}" >
+                        N
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${x.regDt}"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

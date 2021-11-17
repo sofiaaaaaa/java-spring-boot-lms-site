@@ -1,5 +1,7 @@
 package com.zerobase.fastlms.member.service.impl;
 
+import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.admin.mapper.MemberMapper;
 import com.zerobase.fastlms.components.MailComponents;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.exception.MemberNotEmailAuthException;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
+  private final MemberMapper memberMapper;
   private final MailComponents mailComponents;
 
   /** 회원가입 */
@@ -61,7 +64,7 @@ public class MemberServiceImpl implements MemberService {
     String subject = "사이트가입축하메일";
     String text = "<h1>축하</h1>";
     text +=
-        "<div><a href=\"http://localhost:8080//member/email-auth?id=" + uuid + "\">가입완료</a></div>";
+        "<div><a href=\"http://localhost:8080/member/email-auth?id=" + uuid + "\">가입완료</a></div>";
 
     mailComponents.sendMail(email, subject, text);
 
@@ -76,7 +79,12 @@ public class MemberServiceImpl implements MemberService {
       return false;
     }
 
+    // 계정 활성화가 이미 진행됐는지 체크
     Member member = optionalMember.get();
+    if(member.isEmailAuthYn()) {
+      return false;
+    }
+
     member.setEmailAuthYn(true);
     member.setEmailAuthDt(LocalDateTime.now());
     memberRepository.save(member);
@@ -170,6 +178,14 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public List<MemberDto> list() {
+    MemberDto parameter = new MemberDto();
+
+    List<MemberDto> list = memberMapper.selectList(parameter);
+    return list;
+  }
+
+  @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<Member> optionalMember = memberRepository.findById(username);
 
@@ -184,7 +200,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-    grantedAuthorities.add(new SimpleGrantedAuthority(("ROLE_USER")));
+    grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+    if(member.isAdminYn()) {
+      grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
 
     return new User(member.getUserId(), member.getPassword(), grantedAuthorities);
   }

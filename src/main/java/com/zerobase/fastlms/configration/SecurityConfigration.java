@@ -35,16 +35,33 @@ public class SecurityConfigration extends WebSecurityConfigurerAdapter {
     http.csrf().disable();
 
     // antMatchers에 추가하면 로그인 페이지가 뜨지 않는다.
-    http.authorizeRequests().antMatchers("/", "/member/register", "/member/email_auth", "/member/find/password", "/member/reset/password").permitAll();
+    http.authorizeRequests()
+        .antMatchers(
+            "/",
+            "/member/register",
+            "/member/email-auth",
+            "/member/find/password",
+            "/member/reset/password")
+        .permitAll();
+
+    // Admin 페이지 접근 권한
+    http.authorizeRequests()
+            .antMatchers("/admin/**")
+            .hasAnyAuthority("ROLE_ADMIN");
 
     // 로그인페이지 설정
     http.formLogin().loginPage("/member/login").failureHandler(getFailureHandler()).permitAll();
 
     // 로그아웃
     http.logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-            .logoutSuccessUrl("/")
-            .invalidateHttpSession(true);
+        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+        .logoutSuccessUrl("/")
+        .invalidateHttpSession(true);
+
+
+    // 에러 페이지
+    http.exceptionHandling()
+            .accessDeniedPage("/error/denied");
 
     super.configure(http);
   }
@@ -53,10 +70,8 @@ public class SecurityConfigration extends WebSecurityConfigurerAdapter {
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
 
     // 패스워드 지정
-    auth.userDetailsService(memberService)
-            .passwordEncoder(getPasswordEncoder());
+    auth.userDetailsService(memberService).passwordEncoder(getPasswordEncoder());
 
     super.configure(auth);
   }
-
 }
