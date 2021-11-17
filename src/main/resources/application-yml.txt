@@ -1,0 +1,35 @@
+application.yml file settings
+
+spring:
+  thymeleaf:
+    suffix: .html
+    prefix: classpath:/templates/
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/test_db
+    driver-class-name: org.mariadb.jdbc.Driver
+    username:
+    password:
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+
+
+#  spring.mail.properties.mail.smtp.auth=false
+#  spring.mail.properties.mail.smtp.starttls.enable=false
+
+logging:
+  level:
+    root: debug
