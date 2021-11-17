@@ -33,3 +33,9 @@ spring:
 logging:
   level:
     root: debug
+
+mybatis:
+  mapper-location: mybatis/**/*.xml
+  configration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
