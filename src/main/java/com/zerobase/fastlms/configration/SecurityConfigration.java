@@ -33,6 +33,7 @@ public class SecurityConfigration extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
 
     http.csrf().disable();
+    http.headers().frameOptions().sameOrigin();
 
     // antMatchers에 추가하면 로그인 페이지가 뜨지 않는다.
     http.authorizeRequests()

@@ -1,6 +1,7 @@
 package com.zerobase.fastlms.member.service;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.admin.model.MemberParam;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.model.MemberInput;
 import com.zerobase.fastlms.member.model.ResetPasswordInput;
@@ -31,5 +32,5 @@ public interface MemberService extends UserDetailsService {
 	boolean checkResetPassword(String uuid);
 
 	// 회원 목록 조회 (관리자 페이지 전용 메뉴)
-	List<MemberDto> list();
+	List<MemberDto> list(MemberParam parameter);
 }

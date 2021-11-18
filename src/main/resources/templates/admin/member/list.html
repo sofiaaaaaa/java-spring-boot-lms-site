@@ -13,13 +13,48 @@
         .list table th, .list table td {
             border: solid 1px #000;
         }
+
+        .search-form {
+            position: relative;
+            text-align: right;
+            padding: 5px 0 10px 0;
+        }
+        .search-form .total-count {
+            position: relative;
+            float: left;
+            padding: 5px 0 10px 0;
+            height: 20px;
+        }
+
+        .pager {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pager a.on {
+            font-weight: bold;
+            color: red;
+        }
     </style>
 </head>
 <body>
     <h1>관리자 회원관리</h1>
 
-
     <div class="list">
+        <div class="search-form">
+            <p class="total-count">전체 <span th:text="${totalCount}"></span></p>
+            <form action="" method="get">
+            <select name="searchType" id="">
+                <option value="all">전체</option>
+                <option th:selected="${#strings.equals(param.searchType, 'userId')}" value="userId">아이디</option>
+                <option th:selected="${#strings.equals(param.searchType, 'userName')}" value="userName">이름</option>
+                <option th:selected="${#strings.equals(param.searchType, 'phone')}" value="phone">연락처</option>
+            </select>
+            <!--   search type 으로 input 설정시 x 버튼 사용가능 -->
+            <input th:value="${param.searchValue}" type="search" name="searchValue" placeholder="검색어 입력">
+            <button type="submit">검색</button>
+            </form>
+        </div>
+
         <table>
             <thead>
             <tr>
@@ -34,7 +69,7 @@
             </thead>
             <tbody>
             <tr th:each="x : ${list}">
-                <td></td>
+                <td th:text="${x.seq}"></td>
                 <td th:text="${x.userId}"></td>
                 <td th:text="${x.userName}"></td>
                 <td th:text="${x.phone}"></td>
@@ -53,6 +88,9 @@
             </tr>
             </tbody>
         </table>
+
+        <div class="pager" th:utext="${pager}">
+        </div>
     </div>
 </body>
 </html>
